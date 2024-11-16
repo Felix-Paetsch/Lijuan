@@ -6,7 +6,11 @@
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.21.1",
-    "pg": "^8.13.1"
+    "pg": "^8.13.1",
+    "sass": "^1.81.0"
   },
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon index.js --ext js,css,ejs,scss"
+  }
 }

@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import path from 'path';
 import rendering_utils from './rendering_utils.js';
 import { fileURLToPath } from 'url';
+import scss_supprt from "./scss.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,6 +15,7 @@ export default (app) => {
         app.set('view cache', false);
     }
     
+    scss_supprt(app);
     app.use(express.json({ limit: WEBSITE_CONF.json_limit }));
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(compression());

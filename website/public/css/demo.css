@@ -1,0 +1,33 @@
+*{
+    box-sizing: border-box;
+}
+
+body {
+    color: white;
+
+    font-family: "Roboto", sans-serif;
+    padding: 1rem;
+}
+
+main {
+    border-radius: 2rem;
+    background-color: #0D0A0B;
+    min-height: calc(100vh - 8rem);
+    padding: 1em 3em;
+}
+
+#dashboard_flex{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 2em;
+    padding-bottom: 2em;
+}
+
+.table_panel{
+    min-height: 20em;
+    min-width: 25em;
+    background-color: #EFD6AC;
+    border-radius: 1em;
+    margin-right: 2em;
+}

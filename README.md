@@ -23,3 +23,6 @@ descr, dependency
 ## Todo:
 Make .json files visible/give a nice template for others
 .gitkeep files in the correct dirs
+
+Make features like scss support optional
+Make flow to initialize project
