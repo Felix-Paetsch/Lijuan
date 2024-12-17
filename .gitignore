@@ -1,7 +1,9 @@
-**config.json
-database/init/sql
-discord/channel_id_map.json
-json_db/data
 .env
 node_modules
 
+**config.json
+
+database/init/sql
+discord/channel_id_map.json
+json_db/data
+website/public/scss/**.css
