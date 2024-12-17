@@ -1,0 +1,7 @@
+{
+    "is_publish": false,
+    "throw_on_err": true,
+    
+    "catch_module_error": false,
+    "use_modules": ["utils", "website", "json_db", "discord"]
+}

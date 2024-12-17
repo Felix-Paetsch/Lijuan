@@ -36,16 +36,6 @@ export function make_query(query, args = []) {
     });
 }
 
-export function catch_make_query(query, args = []) {
-    const pool = getNextPool();
-    return new Promise((resolve, reject) => {
-        pool.query(query, args, (err, res) => {
-            if (err) return resolve(err);
-            return resolve(res);
-        });
-    });
-}
-
 export function make_transaction(queries) {
     const pool = getNextPool();
     return new Promise(async (resolve, reject) => {

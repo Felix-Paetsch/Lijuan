@@ -1,6 +1,10 @@
 import CHANNELS from "./channel_id_map.json" assert { type: 'json' };
 import { EmbedBuilder } from 'discord.js';
-import try_wrapper from "./try_wrapper.js";
+import { catch_throw_internal } from "../utils/errors.js";
+
+const catch_wrap = (fun) => {
+    return (...args) => catch_throw_internal(() => fun(...args), "discord_error")
+};
 
 let client;
 let event_manager;
@@ -10,18 +14,14 @@ export const init = function(_client, _event_manager){
     event_manager = _event_manager;
 }
 
-export const send_message = try_wrapper(function(channel_ident, msg){
+export const send_message = catch_wrap(function(channel_ident, msg){
     let channel;
     if (typeof channel_ident == "string"){
         channel = client.channels.cache.get(CHANNELS[channel_ident.toLowerCase()]);
-
-        if (!channel) {
-            return event_manager.emit("discord_channel_not_found", {
-                event_source: "discord",
-                type: "error",
-                error: new Error(`Channel: '${ channel_ident }' not found`),
-                internal: true
-            });
+        if (!channel){
+            const err = new Error(`Discord Channel ${ channel_ident } not found`);
+            err.data = { type: "channel_not_found" };
+            throw err;
         }
     } else {
         channel = channel_ident;
@@ -29,19 +29,16 @@ export const send_message = try_wrapper(function(channel_ident, msg){
 
     channel.send(msg);
     return true;
-});
+}, { soft_throw: true });
 
-export const send_embed = try_wrapper(function(channel_ident, embed_data, trigger_error = true){
+export const send_embed = catch_wrap(function(channel_ident, embed_data){
     let channel;
     if (typeof channel_ident == "string"){
         channel = client.channels.cache.get(CHANNELS[channel_ident.toLowerCase()]);
-        if (!channel) {
-            return event_manager.emit("discord_channel_not_found", {
-                event_source: "discord",
-                type: "error",
-                error: new Error(`Channel: '${ channel_ident }' not found`),
-                internal: true
-            });
+        if (!channel){
+            const err = new Error(`Discord Channel ${ channel_ident } not found`);
+            err.data = { error_type: "channel_not_found" };
+            throw err;
         }
     } else {
         channel = channel_ident;
@@ -69,13 +66,12 @@ export const send_embed = try_wrapper(function(channel_ident, embed_data, trigge
         if (!trigger_error){
             return;
         }
-        
-        return event_manager.emit("sending_embed_error", {
-            event_source: "discord",
-            type: "error",
-            error: err,
-            internal: true,
-            embed_data: embed_data
-        });
+    
+        err.data = embed_data;
+        try{
+            err.data.error_type = "embed_error"
+        } catch (e){}
+
+        throw err;
     }
-});
+}, { soft_throw: true });

@@ -26,3 +26,27 @@ Make .json files visible/give a nice template for others
 
 Make features like scss support optional
 Make flow to initialize project
+
+Good JDB interface && design
+How to do better callbacks for DB, error handling?
+
+Make a default APP
+Implement Alpine/HTMX
+(later maybe dev-start, but we will see)
+
+Figure out a better solution for try_respond, maybe using the next() functionality
+Figure out the deal with ejs responses
+
+Tech we use:
+
+- Scss (evt put CSS into gitignore?) Maybe /scss folder in resources and ignore css in - scss / views folders?
+- Express + EJS
+- Alpine.js + Next.js
+
+How much is views in the accessible routes?
+Default Favicon? Robots.txt? well-known?
+Handle DB Errors better
+
+Clean Up website && Make simple example program.. which components are supposed to be edited, which not?
+Probably... only website???
+

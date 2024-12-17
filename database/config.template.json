@@ -1,0 +1,10 @@
+{
+    "pg_user": "postgres",
+    "pg_port": 5432,
+    "pg_host": "localhost",
+    "pg_password": "<password>",
+    "pg_database": "my_project_db",
+    "pg_main_database": "postgres",
+    "pg_ssl": false,
+    "concurrent_pools": 4
+}

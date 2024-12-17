@@ -1,5 +1,4 @@
 import express from 'express';
-import 'dotenv/config';
 import { createServer as createHttpsServer } from 'https';
 import { createServer as createHttpServer } from 'http';
 import fs from 'fs';
@@ -15,11 +14,12 @@ export default (event_manager) => {
     app.event_manager = event_manager;
     app.use((req, res, next) => {
         req.event_manager = event_manager;
+        res.event_manager = event_manager;
         next();
     });
 
     let server;
-    if (WEBSITE_CONF.is_publish) {
+    if (WEBSITE_CONF.use_https) {
         const options = {
             key: fs.readFileSync(WEBSITE_CONF.private_key_path),
             cert: fs.readFileSync(WEBSITE_CONF.cert_path)

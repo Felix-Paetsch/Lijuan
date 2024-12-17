@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counter</title>
+    <link rel="stylesheet" href="/css/defaults.css">
+    <link rel="stylesheet" href="/css/index.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Agu+Display&display=swap" rel="stylesheet">
+
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+</head>
+<body>
+    <main>
+        <h1>Counter:</h1>
+        <div 
+             id="counter"
+             hx-get="/click" 
+             hx-trigger="click" 
+             hx-swap="innerHTML">
+            <%= counter %>
+        </div>
+        <div hx-get="/reset" 
+             hx-trigger="click"
+             hx-swap="none">
+            Reset
+        </div>
+    </main>
+
+    <script src="/js/tools/hot_reload.js"></script>
+</body>
+</html>

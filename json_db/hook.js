@@ -1,9 +1,12 @@
 import fs from 'fs/promises';
 import path from 'path';
+import { catch_wrap_internal } from"../utils/errors.js"
 
 let current_data = null;
 
-const dataFilePath = path.join(process.cwd(), './data/global_storage.json');
+const dataDirPath = path.join(process.cwd(), 'json_db/data');
+await fs.mkdir(dataDirPath, { recursive: true });
+const dataFilePath = path.join(dataDirPath, 'global_storage.json');
 
 const loadInitialData = async () => {
     try {
@@ -16,26 +19,29 @@ const loadInitialData = async () => {
     }
 };
 
-const saveDataToFile = async (data) => {
-    try {
-        await fs.writeFile(dataFilePath, JSON.stringify(data, null, 2), 'utf8');
-    } catch (error) {
-        console.error(`Failed to save global storage: ${error.message}`);
-    }
-};
+const saveDataToFile = catch_wrap_internal(async (data) => {
+    await fs.writeFile(dataFilePath, JSON.stringify(data, null, 2), 'utf8');
+}, "jdb_couldnt_save_file");
 
 export default async (event_manager) => {
-    // Load the initial data from the JSON file
     await loadInitialData();
-
-    // Handle writing global data
-    event_manager.on("jdb_write_global", async (data) => {
+    event_manager.on("jdb_write_global", (data, callback = () => {}) => {
         current_data = data;
-        await saveDataToFile(data); // Save data to file whenever written
+        callback(saveDataToFile(data));
     });
 
-    // Handle reading global data
+    event_manager.on("jdb_write_global_sync", catch_wrap_internal(async (data) => {
+        current_data = data;
+        await saveDataToFile(data);
+    }, "saving_jdb_error"));
+
     event_manager.on("jdb_read_global", (callback) => {
-        return callback(current_data);
+        return callback(
+            new Promise((resolve) => resolve(current_data))
+        );
     });
+
+    event_manager.on("jdb_read_global_sync", catch_wrap_internal((callback) => {
+        return callback(current_data);
+    }, "reading_jdb_error"));
 };

@@ -4,8 +4,6 @@ import { Client, GatewayIntentBits } from 'discord.js';
 import { send_message, init as init_send_messages } from "./send_messages.js";
 import start_listening from "./listen_events/index.js";
 
-import { init_try_wrapper } from "./try_wrapper.js";
-
 export default function activate_discord_bot(event_manager){
     const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
     init_send_messages(client, event_manager);
@@ -32,7 +30,6 @@ export default function activate_discord_bot(event_manager){
         }
     });
 
-    init_try_wrapper(event_manager);
     start_listening(event_manager);
     client.login(DC_CONF.api_token);
 }

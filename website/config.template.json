@@ -1,0 +1,15 @@
+{
+    "use_https": false,
+    "allow_views_as_static_folder": false,
+
+    "throw_on_server_error": true,
+
+    "hot_reload": true,
+    "enable_snapshots": false,
+
+    "json_limit": "50mb",
+    "port": 3001,
+
+    "private_key_path": "",
+    "cert_path": ""
+}

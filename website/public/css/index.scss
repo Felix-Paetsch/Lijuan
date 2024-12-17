@@ -1,0 +1,33 @@
+$dark_color:  #222; // #b6438a; #dd8448
+
+body {
+    background-color: $dark_color;
+    padding: 0;
+    margin: 0;
+
+    color: white;
+    font-family: "Agu Display", serif;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+main{
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+h1{
+    font-size: 5em;
+}
+
+div{
+    text-align: center;
+    font-size: 5em;
+    cursor: pointer;
+    user-select: none;
+}

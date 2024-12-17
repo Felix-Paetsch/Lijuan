@@ -1,5 +1,6 @@
 import express from 'express';
 import WEBSITE_CONF from "../config.json" assert { type: 'json' };
+import GLOBAL_CONF from "../../config.json" assert { type: 'json' };
 import compression from 'compression';
 import bodyParser from 'body-parser';
 import path from 'path';
@@ -11,7 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default (app) => {
-    if (WEBSITE_CONF.env === 'development') {
+    if (!GLOBAL_CONF.is_publish) {
         app.set('view cache', false);
     }
     
@@ -20,12 +21,10 @@ export default (app) => {
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(compression());
 
-    if (WEBSITE_CONF["use_minified"]) {
-        app.set('views', path.join(__dirname, "../",'views_tiny'));
-        app.use(express.static(path.join(__dirname, "../", 'public_tiny')));
-    } else {
-        app.set('views', path.join(__dirname, "../", 'views'));
-        app.use(express.static(path.join(__dirname, "../", 'public')));
+    app.set('views', path.join(__dirname, "../", 'views'));
+    app.use(express.static(path.join(__dirname, "../", 'public')));
+    if (WEBSITE_CONF["allow_views_as_static_folder"]){
+        app.use(express.static(path.join(__dirname, "../", 'views')));
     }
 
     app.use('/.well-known', express.static(path.join(__dirname, 'public/.well-known'), {
@@ -35,6 +34,8 @@ export default (app) => {
     app.set('view engine', 'ejs');
 
     app.use((req, res, next) => {
+        req.event_manager = app.event_manager;
+        
         if (!req.headers.host) {
             return res.status(403).send("Bad request: Host header is required\nConsider updating your browser");
         }

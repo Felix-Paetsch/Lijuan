@@ -2,15 +2,19 @@ import fs from 'fs';
 import * as sass from 'sass';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
+import WEBSITE_CONF from "../config.json" assert { type: 'json' };
 
 export default (app) => {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = dirname(__filename);
 
     const staticPaths = [
-        join(__dirname, "../", 'public'),
-        join(__dirname, "../", 'views')
+        join(__dirname, "../", 'public')
     ];
+
+    if (WEBSITE_CONF["allow_views_as_static_folder"]){
+        staticPaths.push(join(__dirname, "../", 'views'));
+    }
     
     app.get('*.css', async (req, res, next) => {
         for (const staticPath of staticPaths) {
@@ -30,6 +34,7 @@ export default (app) => {
                     const sourceStats = fs.statSync(sourceFilePath);
                     if (!fs.existsSync(cssFilePath) || fs.statSync(cssFilePath).mtime < sourceStats.mtime) {
                         const result = sass.compile(sourceFilePath);
+                        res.set('Content-Type', 'text/css');
                         res.send(result.css);
                         fs.writeFileSync(cssFilePath, result.css);
                         return;
@@ -42,7 +47,6 @@ export default (app) => {
             }
         }
 
-        // If no matching SCSS/Sass file found, move to next middleware
         next();
     });
 
